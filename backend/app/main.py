@@ -1,16 +1,26 @@
-# This is a sample Python script.
+from fastapi import FastAPI
+from sqlalchemy import text
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from app.core.config import settings
+from app.api.api import api_router
+from app.database.database import Base, engine
+from app.models.user import User
+
+app = FastAPI(title=settings.APP_NAME)
+Base.metadata.create_all(bind=engine)
+app.include_router(
+    api_router,
+    prefix=settings.API_V1_STR
+)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+@app.get("/")
+def root():
 
+    with engine.connect() as connection:
+        result = connection.execute(text("SELECT 1"))
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    return {
+        "message": "API Running",
+        "db_test": result.scalar()
+    }
