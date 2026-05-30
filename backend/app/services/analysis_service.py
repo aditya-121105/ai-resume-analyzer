@@ -1,8 +1,13 @@
 from fastapi import HTTPException
-
+from app.analysis.certificate_analyzer import (
+    extract_certifications
+)
 from sqlalchemy.orm import Session
 from app.analysis.recommendation_engine import (
     generate_recommendations
+)
+from app.analysis.role_detector import (
+    detect_role
 )
 from app.models.resume import Resume
 from app.models.user import User
@@ -44,12 +49,28 @@ def analyze_resume_skills_service(
 
         job_description
     )
-    recommendations = generate_recommendations(
-
-        analysis_result["missing_skills"]
+    detected_certifications = (
+        extract_certifications(
+            resume.resume_text
+        )
+    )
+    analysis_result[
+        "detected_certifications"
+    ] = detected_certifications
+    target_role = detect_role(
+        job_description
+    )
+    recommendations = (
+        generate_recommendations(
+            analysis_result["missing_skills"],
+            target_role
+        )
     )
     analysis_result.update(
         recommendations
+    )
+    analysis_result["target_role"] = (
+        target_role
     )
     analysis = Analysis(
         resume_id=resume.id,

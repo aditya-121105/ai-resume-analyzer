@@ -1,55 +1,105 @@
-PROJECT_RECOMMENDATIONS = {
+ROLE_PROJECT_RECOMMENDATIONS = {
 
-    "docker": [
-        "Dockerized FastAPI Resume Analyzer"
-    ],
+    "Backend Engineer": {
 
-    "aws": [
-        "Deploy FastAPI Application on AWS EC2"
-    ],
+        "docker": [
+            "Dockerized FastAPI API"
+        ],
 
-    "fastapi": [
-        "JWT Authentication REST API"
-    ],
+        "fastapi": [
+            "JWT Authentication REST API"
+        ],
 
-    "redis": [
-        "FastAPI Redis Cache Project"
-    ],
+        "aws": [
+            "Deploy FastAPI Application on AWS EC2"
+        ]
+    },
 
-    "kubernetes": [
-        "Microservices Deployment Project"
-    ]
+    "Machine Learning Engineer": {
+
+        "nlp": [
+            "Resume Classification System",
+            "Sentiment Analysis Application"
+        ],
+
+        "tensorflow": [
+            "Image Classification Project"
+        ],
+
+        "deep learning": [
+            "CNN Image Classification System"
+        ]
+    },
+
+    "DevOps Engineer": {
+
+        "docker": [
+            "Containerized Microservice Deployment"
+        ],
+
+        "kubernetes": [
+            "Kubernetes Cluster Deployment"
+        ],
+
+        "terraform": [
+            "AWS Infrastructure as Code Project"
+        ]
+    }
 }
 
+ROLE_CERTIFICATION_RECOMMENDATIONS = {
 
-CERTIFICATION_RECOMMENDATIONS = {
+    "Backend Engineer": {
 
-    "aws": [
-        "AWS Cloud Practitioner"
-    ],
+        "aws": [
+            "AWS Cloud Practitioner"
+        ],
 
-    "docker": [
-        "Docker Foundations"
-    ],
+        "docker": [
+            "Docker Foundations"
+        ]
+    },
 
-    "kubernetes": [
-        "Kubernetes for Developers"
-    ]
+    "Machine Learning Engineer": {
+
+        "nlp": [
+            "Natural Language Processing Specialization"
+        ],
+
+        "tensorflow": [
+            "TensorFlow Developer Certificate"
+        ]
+    }
 }
 
 def generate_recommendations(
-    missing_skills: list
+    missing_skills,
+    target_role
 ):
 
     recommended_projects = []
 
     recommended_certifications = []
 
+    role_projects = (
+        ROLE_PROJECT_RECOMMENDATIONS.get(
+            target_role,
+            {}
+        )
+    )
+
+    role_certifications = (
+        ROLE_CERTIFICATION_RECOMMENDATIONS.get(
+            target_role,
+            {}
+        )
+    )
+
     for skill in missing_skills:
 
         recommended_projects.extend(
 
-            PROJECT_RECOMMENDATIONS.get(
+            role_projects.get(
                 skill,
                 []
             )
@@ -57,7 +107,7 @@ def generate_recommendations(
 
         recommended_certifications.extend(
 
-            CERTIFICATION_RECOMMENDATIONS.get(
+            role_certifications.get(
                 skill,
                 []
             )
